@@ -1,0 +1,924 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Foundation Models Language Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #222;
+            margin-top: 40px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+        a {
+            color: #1a0dab;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Foundation Models Language Project</h1>
+<p><strong>GitHub Repository:</strong> <a href="https://github.com/vimalthomas/foundationmodels">https://github.com/vimalthomas/foundationmodels</a></p>
+
+<hr>
+
+<h2>Project Overview</h2>
+<h1>Project Overview</h1>
+
+<h2>Project Summary</h2>
+
+<p>Based on the names of the files provided, the overall purpose of this project appears to be centered around the development and experimentation of various language models, particularly focusing on deep learning techniques to process and understand natural language data.</p>
+
+<ol>
+<li><p><strong>gru<em>model, rnn</em>model, lstm<em>model, transformer</em>model</strong> - These files suggest implementations of different neural network architectures for language modeling. GRU (Gated Recurrent Unit), LSTM (Long Short-Term Memory), and RNN (Recurrent Neural Network) are all types of recurrent neural networks that are effective in handling sequences, like text. The Transformer model file indicates the use of a more recent and powerful model architecture that relies on self-attention mechanisms.</p></li>
+<li><p><strong>train_utils</strong> - This file likely contains utility functions or classes that aid in training the various models. This might include functions to set up training loops, calculate loss, update model weights, or handle checkpoints and evaluations.</p></li>
+<li><p><strong>tokenizer</strong> - Tokenization is a fundamental step in preparing text data for model training, transforming raw text into a format that can be processed by neural networks. This file likely contains code to perform this tokenization, possibly implementing or adapting existing tokenizer models.</p></li>
+<li><p><strong>dataset_loader</strong> - This file is expected to contain code for loading and possibly preprocessing datasets that are used to train and test the models. Handling large datasets efficiently is crucial for training language models, so this component is key.</p></li>
+<li><p><strong>llm<em>project, llm</em>experiment</strong> - These files suggest a focus specifically on large language models (LLM), which are a subset of models capable of understanding and generating human-like text based on the training data they’ve been fed. The project file might define the scope and objectives of working with LLMs, while the experiment file could involve testing hypotheses, configurations, or novel approaches specific to these models.</p></li>
+</ol>
+
+<p>Overall, the project seems to be aimed at exploring various neural network technologies to advance the field of natural language processing, with a particular focus on implementing, training, and experimenting with different architectures and techniques to optimize performance and possibly innovate in the area of large language models.</p>
+
+<h2>File Contributions</h2>
+
+<ul>
+<li>gru_model.py: The <code>model.py</code> file defines a class <code>GRULanguageModel</code> that uses a Gated Recurrent Unit (GRU) neural network for natural language processing tasks, particularly aimed at text generation. The model includes methods for training, predicting the next token, and generating text sequences.</li>
+</ul>
+
+<p><strong>Key Components of <code>GRULanguageModel</code></strong>:
+1. <strong>Embedding Layer</strong>: Maps vocabulary indices into embedding vectors and handles padding.
+2. <strong>GRU Layer</strong>: Processes the sequence data, capable of using multiple layers and handling dropout for regularization.
+3. <strong>Dropout Layer</strong>: Applied after the GRU to prevent overfitting.
+4. <strong>Fully Connected Layer</strong>: Maps the output of the GRU to the vocabulary size for prediction.</p>
+
+<p><strong>Methods</strong>:
+- <strong><code>forward</code></strong>: Takes input tokens and an optional hidden state to produce logits for each token and an updated hidden state.
+- <strong><code>predict_next_token</code></strong>: Generates the next token in a sequence by providing the model with the current state and the last token input, using a temperature parameter to control randomness in prediction.
+- <strong><code>generate</code></strong>: Generates a sequence of text starting from a given prompt. It supports different modes such as generating a fixed maximum length sequence and returning either the full generated sequence or just the continuation beyond the prompt.</p>
+
+<p>Overall, this model can be used for tasks where generating natural language text or predicting sequential data is required. The architecture is structured in a way that it can be trained on a large corpus of text and then used to generate text sequences similar to the training data.
+- train_utils.py: This file defines Python functions for training and evaluating a machine learning model, specifically a neural network using the PyTorch framework. </p>
+
+<ol>
+<li><p><strong>train_model function:</strong> </p>
+
+<ul>
+<li>It takes parameters such as the model, data loaders for training and validation, tokenizer, device, and others to set up and run the training process. </li>
+<li>The function initializes the optimizer (<code>AdamW</code>) and learning rate scheduler, sets a criterion for loss calculation, and then loops over the specified number of epochs to train the model on the training data.</li>
+<li>During each epoch, the model's training and validation losses are calculated and printed. The model state is saved whenever a new best validation loss is achieved.</li>
+<li>Losses across all epochs are plotted and saved using the <code>plot_losses</code> function.</li>
+</ul></li>
+<li><p><strong>plot_losses function:</strong></p>
+
+<ul>
+<li>Used to visually depict the training and validation loss per epoch using matplotlib. It saves the plot as an image file using a timestamp in its filename.</li>
+</ul></li>
+<li><p><strong>evaluate_model function:</strong></p>
+
+<ul>
+<li>It loads the best-performing model state, evaluates it on a test dataset, and computes the loss.</li>
+<li>Additionally, it calculates the BLEU score (a metric for evaluating text which compares n-grams of the candidate with n-grams of the reference data) to assess the linguistic quality of model outputs as compared to actual target sequences.</li>
+</ul></li>
+</ol>
+
+<p>The script also imports necessary libraries for its operations, including PyTorch for modeling and computation, tqdm for progress bars during training loops, and NLTK for calculating BLEU scores.
+- transformer_model.py: The provided Python file defines a language model based on the Transformer architecture, specifically for the task of next-word prediction. Here's a summary of its components and functionalities:</p>
+
+<ol>
+<li><p><strong>Initialization (<code>__init__</code>)</strong>: The <code>TransformerLanguageModel</code> class initializes with parameters for the vocabulary size, embedding dimensions, number of attention heads, number of Transformer layers, and padding token ID. It also sets up positional embeddings for sequences up to a defined maximum length and applies dropout for regularization.</p></li>
+<li><p><strong>Forward Pass (<code>forward</code>)</strong>: This method processes input tokens through embeddings and the Transformer encoder. It applies a sequence-dependent mask (for causal attention) and a padding mask to handle varying input lengths and pad tokens respectively, while also combining token and position embeddings with dropout. The output is then passed through a linear layer to transform encoder output into vocabulary-sized logits for each position in the input sequence.</p></li>
+<li><p><strong>Helper Method (<code>_generate_square_subsequent_mask</code>)</strong>: Generates a triangular (upper triangular filled with <code>True</code> values starting from the diagonal) mask to prevent future positions from influencing the prediction at the current position, used for imposing the autoregressive property in the sequence generation.</p></li>
+<li><p><strong>Prediction Method (<code>predict_next_token</code>)</strong>: This methods performs a forward pass through the model to obtain logits for the last token position, which are then scaled by a temperature parameter, and processed using softmax to get probabilities. The next token is sampled from these probabilities, ensuring that the beginning-of-sequence token is not selected.</p></li>
+<li><p><strong>Text Generation (<code>generate</code>)</strong>: This function takes a text prompt, tokenizes it, and then uses the model to autoregressively generate text by repeatedly predicting the next token until a maximum length or the end-of-sequence token is reached. The generated text can either include the prompt or just the continuation, according to the <code>return_continuation_only</code> parameter.</p></li>
+</ol>
+
+<p>Overall, the file implements a Transformer-based model suitable for generating text or predicting the next token in a sequence, equipped with functionalities to handle input sequences and offer user-friendly interfaces for generating text given a prompt.
+- llm_project.py: This script performs natural language processing tasks using various machine learning models built with PyTorch. Here’s a summary of its main functionalities:</p>
+
+<ol>
+<li><p><strong>Data Download and Tokenizer Training</strong>: The script first downloads training and testing datasets from specified URLs, and merges additional text data to form a corpus. It then trains a tokenizer using the combined text corpus to process the text data.</p></li>
+<li><p><strong>Dataset Preparation</strong>: Using the trained tokenizer, it transforms train and test data into a format suitable for model training and evaluation by tokenizing and encoding the texts into sequences.</p></li>
+<li><p><strong>Model Building</strong>: It supports the selection and construction of different types of neural network models for language processing, including GRU, LSTM, RNN, and Transformer models. You can select which model to use via a configuration.</p></li>
+<li><p><strong>Training and Evaluation</strong>: It trains the chosen model on the processed training dataset using specific hyperparameters, saves the best-performing version of the model, and then evaluates it on the testing dataset.</p></li>
+<li><p><strong>Text Generation</strong>: Finally, the script uses the trained model to generate text based on custom prompts, demonstrating the model's ability to produce coherent and contextually appropriate language continuations.</p></li>
+</ol>
+
+<p>The script is structured to be flexible, allowing for easy switching between different machine learning models and adjustment of parameters, making it suitable for experiments with natural language processing tasks.
+- tokenizer.py: This file defines a series of functions and a class related to text tokenization using the SentencePiece library, specifically using a Byte Pair Encoding (BPE) model. Key functionalities include:</p>
+
+<ol>
+<li><p><strong>TokenizerWrapper class:</strong> Wraps the SentencePiece tokenizer for easier use in other parts of an application. It allows for the loading of a model, encoding texts to sequences of token IDs with optional beginning-of-sentence (BOS) and end-of-sentence (EOS) tokens, decoding token IDs back to strings while optionally skipping special tokens like BOS, EOS, and padding (PAD), and retrieving the IDs for special tokens.</p></li>
+<li><p><strong>download<em>and</em>merge<em>text</em>files function:</strong> Downloads text files from a provided API URL, merges them into a single file (corpus for training), handling encoding and concatenation.</p></li>
+<li><p><strong>train_tokenizer function:</strong> Trains a BPE tokenizer using a corpus from a specified path. The tokenizer is configured with a specified vocabulary size and includes definitions for special tokens such as padding, unknown, BOS, and EOS.</p></li>
+<li><p><strong>download<em>file</em>from_url function:</strong> A utility function to download a file from a given URL and save it locally, verifying the download status.</p></li>
+</ol>
+
+<p>The workflow facilitated by these functions typically involves downloading and preparing textual data, training a tokenizer on this data, and then using the tokenizer for transforming texts to and from sequences of token IDs in applications such as machine learning models for natural language processing.
+- dataset_loader.py: The file primarily implements utilities and classes needed for preprocessing and loading textual data for use in machine learning models, specifically those dealing with sequential data like natural language processing tasks.</p>
+
+<ol>
+<li><p><strong>Function - <code>add_special_tokens</code></strong>: This function is designed to modify lists of strings by adding special tokens at the beginning and end of each string. It prepends "<bos>" (beginning of sentence) to prompts that start with a capital letter and appends "<eos>" (end of sentence) to completions that end with a period, exclamation mark, or question mark.</p></li>
+<li><p><strong>Class - <code>TextDataset</code></strong>: This class inherits from <code>torch.utils.data.Dataset</code> and is customized to handle loading and encoding text data from a JSON-formatted file. Its constructor reads lines from a file, extracts the prompt and completion texts, combines them, and tokenizes them into IDs using a specified tokenizer, while also adding start and end tokens. The dataset is designed to support selective sequence length (capped by <code>max_seq_len</code>) and includes only samples that form a valid sequence.</p></li>
+<li><p><strong>Function - <code>__len__</code></strong> (inside TextDataset): This method returns the number of samples in the dataset.</p></li>
+<li><p><strong>Function - <code>__getitem__</code></strong> (inside TextDataset): This method returns a tuple of tensors representing inputs and targets for a given index. The inputs consist of all token IDs except the last, and the targets consist of all token IDs except the first to facilitate prediction tasks (like language modeling).</p></li>
+<li><p><strong>Function - <code>collate_fn</code></strong>: This function is used in data loading to efficiently batch multiple samples. It pads sequences in a batch to a uniform length using a specified padding value (<code>pad_val</code>). This function ensures that the data fed into a model is appropriately batched and padded for training, making it compatible with models expecting input of uniform size.</p></li>
+</ol>
+
+<p>Overall, the file provides tools to facilitate the preprocessing, tokenization, loading, and batching of text data for machine learning applications, ensuring data is model-ready for tasks that involve predicting sequences or understanding language context.
+- rnn_model.py: The provided Python file defines a simple RNN-based language model built using PyTorch for generating text sequences. Here is a summary of its functionalities:</p>
+
+<ol>
+<li><p><strong>Class Definition (<code>RNNLanguageModel</code>)</strong>: This class inherits from <code>torch.nn.Module</code> and encapsulates the RNN language model. It includes methods for initializing the model, performing a forward pass, predicting the next token, and generating text given a prompt.</p></li>
+<li><p><strong>Initialization (<code>__init__</code>)</strong>: Initializes the language model with an embedding layer, an RNN layer, a dropout layer, and a fully connected layer to output the probabilities over the vocabulary. The constructor parameters specify the size of the vocabulary, embedding dimension, hidden dimension of the RNN, number of RNN layers, the pad token identifier, and the dropout probability.</p></li>
+<li><p><strong>Forward Pass (<code>forward</code>)</strong>: Takes token IDs as input and computes the forward pass of the model using the embedding, RNN, and dropout layers. It returns the logits output by the fully connected layer and the hidden state.</p></li>
+<li><p><strong>Predict Next Token (<code>predict_next_token</code>)</strong>: Given input token IDs, this method uses the model to predict the next token in the sequence. It uses a temperature parameter to scale the logits and adjust the "sharpness" of the probability distribution before sampling from it.</p></li>
+<li><p><strong>Text Generation (<code>generate</code>)</strong>: Generates text starting from a user-provided prompt. It repeatedly uses the model to predict the next token and append it to the sequence until an end-of-sequence token is generated or a maximum length is reached. It returns either the full generated sequence including the prompt or just the continuation depending on the <code>return_continuation_only</code> parameter.</p></li>
+</ol>
+
+<p>The model and methods exemplify a basic implementation of a recurrent neural network for tasks like text prediction and generation, showcasing how to work with embeddings, RNNs, and softmax layers effectively in a practical setting using PyTorch.
+- lstm_model.py: This file defines a language model based on Long Short-Term Memory (LSTM) networks in PyTorch. Here's a summary of each component:</p>
+
+<ol>
+<li><p><strong>LSTMLanguageModel class</strong>: Inherits from PyTorch's <code>nn.Module</code>. It's designed to model language using embedded representations and recurrent neural networks.</p>
+
+<ul>
+<li><strong><em>_init</em>_ method</strong>: Initializes the model with the following:
+<ul>
+<li><strong>embedding</strong>: Maps each token in a vocabulary to a high-dimensional vector.</li>
+<li><strong>lstm</strong>: A stack of LSTM layers for sequential data processing.</li>
+<li><strong>dropout</strong>: Regularization method to prevent overfitting by randomly setting a fraction of the input units to zero during training.</li>
+<li><strong>fc (fully connected layer)</strong>: Maps the LSTM output to the vocabulary size to predict the likelihood of each token.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>forward method</strong>: Defines the computation performed at every call, taking <code>input_ids</code> (token indices) and an optional hidden state. It returns the logits (non-normalized predictions) for the next token in the sequence and the new hidden state.</p></li>
+<li><p><strong>predict<em>next</em>token method</strong>: Predicts the next token in a sequence given the input tokens. Uses temperature scaling to control the randomness of predictions and includes functionality to avoid re-generating the beginning-of-sentence token.</p></li>
+<li><p><strong>generate method</strong>: Generates text starting from a given prompt. Continues to generate tokens using the <code>predict_next_token</code> method until the end-of-sentence token is generated or the maximum length is reached. It offers an option to return only the text generated after the prompt.</p></li>
+</ol>
+
+<p>This model can be trained to predict the probability of the next token in the sequence, which is typical for language modeling. It can also be used for generating text sequences given a prompt.
+- llm_experiment.py: This Python script, part of a Jupyter notebook (<code>llm_experiment.ipynb</code>), is set up for conducting language model training experiments using various neural network architectures such as GRU, LSTM, RNN, and Transformer. The script includes the following key steps and functionality:</p>
+
+<ol>
+<li><p><strong>Imports and Setup</strong>:</p>
+
+<ul>
+<li>It imports necessary modules including PyTorch (<code>torch</code>), and several helper modules for tokenization (<code>tokenizer</code>), dataset loading (<code>dataset_loader</code>), and the models themselves (<code>gru_model</code>, <code>lstm_model</code>, <code>rnn_model</code>, <code>transformer_model</code>).</li>
+<li>It defines a device for running the training (CPU or GPU, depending on availability).</li>
+</ul></li>
+<li><p><strong>Hyperparameter Configuration</strong>:</p>
+
+<ul>
+<li>A dictionary named <code>hyperparams_grid</code> contains sets of hyperparameters for different models. This allows easy configuration and iteration over various setups to test their performance impacts.</li>
+</ul></li>
+<li><p><strong>Data Handling</strong>:</p>
+
+<ul>
+<li>Functions from the <code>tokenizer</code> module handle the downloading, merging, and preparation of text files and training the tokenizer.</li>
+<li>Text datasets for training and testing are loaded and prepared using a custom <code>TextDataset</code> class and <code>DataLoader</code> from PyTorch, which handles batching and sequence padding.</li>
+</ul></li>
+<li><p><strong>Model Training and Evaluation</strong>:</p>
+
+<ul>
+<li>The script defines a function <code>run_experiments()</code> that iterates through specified model configurations, initializes models, and trains them using the training dataset. It evaluates models on a testing dataset, stores, and logs results including performance metrics like perplexity and BLEU score.</li>
+<li>The experiment can be conducted over different neural network architectures by initializing respective class objects (<code>GRULanguageModel</code>, <code>LSTMLanguageModel</code>, etc.).</li>
+</ul></li>
+<li><p><strong>Execution Flow</strong>:</p>
+
+<ul>
+<li>It involves initializing the tokenizer, setting up datasets, data loaders, and then calling <code>run_experiments()</code> with the desired model type and hyperparameters to start the training and evaluation process.</li>
+</ul></li>
+</ol>
+
+<p>The file as a whole is structured to facilitate experimenting with different language model architectures and configurations, aiming to compare their performance on a textual dataset automatically and systematically.</p>
+
+
+<hr>
+
+<h2>Dependency Diagram</h2>
+<img src="ordered_full_repo_structure.png" alt="Dependency Graph">
+
+<hr>
+
+<h2>Detailed File Documentation</h2>
+<h1>Detailed File-Level Documentation</h1>
+
+<h1>gru_model.py</h1>
+
+<h2>File Summary</h2>
+
+<p>The <code>model.py</code> file defines a GRU-based neural network language model in PyTorch specifically tailored for generating text. Here's a summary of the key components and functionality of the script:</p>
+
+<ol>
+<li><p><strong>Imports</strong>: The script imports necessary modules from PyTorch including basic neural network layers and functional APIs.</p></li>
+<li><p><strong>GRULanguageModel Class</strong>: This class inherits from <code>nn.Module</code> and implements a language model using a GRU (Gated Recurrent Unit) layer. Its main components are:</p>
+
+<ul>
+<li><code>embedding</code>: Maps token indices to embeddings.</li>
+<li><code>gru</code>: A GRU layer for processing sequences of embeddings with support for dropout and multiple layers.</li>
+<li><code>dropout</code>: A dropout layer for regularization.</li>
+<li><code>fc</code>: A linear layer that projects the GRU output back to the vocabulary space.</li>
+</ul></li>
+<li><p><strong>Constructor <code>__init__</code></strong>: Initializes the model parts and accepts parameters for vocabulary size, embedding dimension, hidden dimension of the GRU, number of GRU layers, padding token ID, and dropout probability.</p></li>
+<li><p><strong><code>forward</code> Method</strong>: Defines the forward pass of the model which includes embedding the input tokens, passing them through the GRU, applying dropout, and then through a linear layer to get the logits for next token prediction.</p></li>
+<li><p><strong><code>predict_next_token</code> Method</strong>: This method predicts the next token in the sequence given the current input ids and optional hidden state. It handles setting the model to evaluate mode, prevents logit explosion using temperature scaling, and blocks prediction of a beginning-of-sequence token by setting its logit to negative infinity.</p></li>
+<li><p><strong><code>generate</code> Method</strong>: Facilitates text generation from a prompt. It encodes the given prompt using a tokenizer, initializes generation with optional device placement, and iteratively predicts next tokens until the end-of-sequence token is predicted or a maximum length is reached. It supports returning either the full text including the prompt or just the continuation after the prompt.</p></li>
+</ol>
+
+<p>This class provides a comprehensive structure for text generation using a GRU model, with methods for predicting the next token and generating text given a starting prompt, making it suitable for applications in natural language processing tasks like text completion and automated writings.</p>
+
+<h2>Classes</h2>
+
+<ul>
+<li>GRULanguageModel: The <code>GRULanguageModel</code> class is a PyTorch <code>nn.Module</code> designed for natural language processing tasks such as token prediction and text generation. It uses a Gated Recurrent Unit (GRU) network to model language sequences. Here are the key components and functionalities of the class:</li>
+</ul>
+
+<ol>
+<li><p><strong>Initialization (<code>__init__</code> method)</strong>:</p>
+
+<ul>
+<li><strong>Parameters</strong>:
+<ul>
+<li><code>vocab_size</code>: Size of the vocabulary.</li>
+<li><code>embed_dim</code>: Dimensionality of token embeddings.</li>
+<li><code>hidden_dim</code>: Dimensionality of the hidden state of the GRU.</li>
+<li><code>num_layers</code>: Number of GRU layers.</li>
+<li><code>pad_token_id</code>: Token ID used for padding.</li>
+<li><code>dropout_prob</code>: Probability of dropping out edges during training.</li>
+</ul></li>
+<li><strong>Components</strong>:
+<ul>
+<li>An embedding layer to convert token IDs to vectors.</li>
+<li>A GRU network for handling sequences.</li>
+<li>A dropout layer for regularization.</li>
+<li>A fully connected layer to map from hidden state space back to vocabulary space for output.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Forward Pass (<code>forward</code> method)</strong>:</p>
+
+<ul>
+<li>Processes input tokens through the embedding layer, GRU network, and dropout, finally outputting a vector of logits and a hidden state for each token in the sequence.</li>
+</ul></li>
+<li><p><strong>Token Prediction (<code>predict_next_token</code> method)</strong>:</p>
+
+<ul>
+<li>Performs inference to predict the next token in a sequence given the input token IDs and possible previous hidden states.</li>
+<li>Utilizes softmax to convert logits to probabilities after adjusting for temperature, which controls the randomness in prediction.</li>
+<li>Masks the probability of the beginning-of-sentence token to prevent it from being predicted during generation.</li>
+</ul></li>
+<li><p><strong>Text Generation (<code>generate</code> method)</strong>:</p>
+
+<ul>
+<li>Generates text starting from a given prompt and extending up to a specified maximum length.</li>
+<li>It can operate in two modes based on <code>return_continuation_only</code>:
+<ul>
+<li>When <code>True</code>, the method returns only the continuation of the prompt.</li>
+<li>When <code>False</code>, it returns the entire text including the prompt.</li>
+</ul></li>
+<li>Uses the <code>predict_next_token</code> to iteratively generate each token.</li>
+</ul></li>
+</ol>
+
+<p>The class effectively encapsulates a language model that leverages a GRU to process and generate text, applying techniques like dropout for better generalization and providing functionalities to interact with higher-level operations like text generation based on provided prompts.</p>
+
+<h1>train_utils.py</h1>
+
+<h2>File Summary</h2>
+
+<p>The Python file provides code for training, evaluating, and visualizing the performance of a machine learning model using the PyTorch library. Here’s a summary of the main components:</p>
+
+<ol>
+<li><p><strong>Imports</strong>: The script imports necessary libraries and modules including <code>torch</code>, <code>matplotlib</code> for plotting, and <code>nltk</code> for computing BLEU scores, which are used to assess translation models.</p></li>
+<li><p><strong>train_model function</strong>: </p>
+
+<ul>
+<li>Trains a given model on a specified training dataset and validates it on a test dataset.</li>
+<li>Utilizes <code>AdamW</code> optimizer with learning rate schedulers and cross-entropy loss.</li>
+<li>At the end of each epoch, it checks if the validation loss is the lowest encountered and if so, saves the model's state.</li>
+<li>Losses for each epoch are recorded and subsequently plotted using <code>plot_losses</code>.</li>
+</ul></li>
+<li><p><strong>plot_losses function</strong>:</p>
+
+<ul>
+<li>Plots training and validation loss curves and saves the plot to a file named according to the model type and timestamp.</li>
+</ul></li>
+<li><p><strong>evaluate_model function</strong>:</p>
+
+<ul>
+<li>Loads a model from a specified path and evaluates it on a test data loader.</li>
+<li>Uses cross-entropy loss and BLEU score for evaluation.</li>
+<li>Outputs include total loss and BLEU scores for each batch.</li>
+</ul></li>
+</ol>
+
+<p>The script is structured to support typical machine learning workflows of training, evaluating, and visualizing model performance, specifically designed for deep learning models in natural language processing tasks with the example usage of CrossEntropy loss and BLEU for evaluation metrics.</p>
+
+<h2>Top-level Functions</h2>
+
+<ul>
+<li>train_model: The <code>train_model</code> function is designed to train a machine learning model using the provided training and testing datasets, with customization for learning parameters and model saving.</li>
+</ul>
+
+<p>Here's an outline of its functionality:</p>
+
+<ol>
+<li><p><strong>Initialization</strong>: It initializes the AdamW optimizer with a specified learning rate (<code>lr</code>) and a scheduler to reduce the learning rate based on the validation loss performance. A cross-entropy loss function integrates an 'ignore_index' for the padding token from the tokenizer.</p></li>
+<li><p><strong>Training Loop</strong>: Over a series of epochs (default 30):</p>
+
+<ul>
+<li><strong>Train Phase</strong>: For each batch from the <code>train_loader</code>, it computes the loss between the model outputs and targets, backpropagates to update model weights, and accumulates the train loss.</li>
+<li><strong>Validation Phase</strong>: The model is set to evaluation mode to prevent updates during validation. It calculates the validation loss for batches from the <code>test_loader</code>.</li>
+<li><strong>Logging and Learning Rate Adjustment</strong>: After each epoch, the average losses for training and validation are calculated and printed. The learning rate scheduler may adjust the learning rate based on the validation loss.</li>
+<li><strong>Model Saving</strong>: If the validation loss improves (i.e., decreases below the previously best recorded validation loss), the model's state dictionary is saved to the specified path.</li>
+</ul></li>
+<li><p><strong>Loss Plotting</strong>: After training, it plots the training and validation loss evolution over the epochs using a helper function, helping to visualize the model's learning progress.</p></li>
+</ol>
+
+<p>The function effectively handles the entire training and validation process, including dynamic updates of learning parameters and tracking of performance metrics, while saving the best-performing model state.</p>
+
+<ul>
+<li>plot_losses: The provided function, <code>plot_losses</code>, takes three parameters: <code>train_losses</code> and <code>val_losses</code>, which are lists representing the loss during training and validation respectively, and an optional parameter <code>model_name</code> set to "model" by default. The function generates a plot displaying both the training and validation loss curves and titles the plot using the name of the model converted to uppercase followed by "Loss Curve". The x-axis represents epochs, and the y-axis represents loss. It includes a legend to differentiate between the training and validation curves.</li>
+</ul>
+
+<p>The plot is saved as a PNG file named using the model name, the phrase "loss_curve", and the current timestamp to ensure the filename is unique. The function then closes the plot to free up memory and prints out a message indicating where the loss curve was saved, showing the filename. The filename includes a dynamically generated timestamp to ensure it is unique each time the function is run.</p>
+
+<ul>
+<li>evaluate_model: The function <code>evaluate_model</code> is designed to load a pre-trained model and evaluate its performance on test data, specifically assessing its perplexity (PPL) and BLEU score. The process involves the following steps:</li>
+</ul>
+
+<ol>
+<li><p><strong>Loading the Model</strong>: The function starts by loading the model parameters from a saved state <code>model_path</code> using <code>torch.load</code>.</p></li>
+<li><p><strong>Evaluation Mode</strong>: Sets the model to evaluation mode (<code>model.eval()</code>), which turns off certain features like dropout.</p></li>
+<li><p><strong>Loss Function</strong>: Initializes a <code>CrossEntropyLoss</code> for the model, which ignores padded indices in sequences as defined by the tokenizer.</p></li>
+<li><p><strong>Preparation for Metrics Calculation</strong>: The variables <code>total_loss</code> and <code>bleu_scores</code> are initialized to accumulate the loss values and compute BLEU scores across all test data batches.</p></li>
+<li><p><strong>Evaluation Loop</strong>: Iterates over <code>test_loader</code> which contains batches of input and target sequences.</p>
+
+<ul>
+<li>The function moves the current batch to the specified <code>device</code>.</li>
+<li>It computes the logits of the model and evaluates the batch loss.</li>
+<li>Accumulates the computed loss to <code>total_loss</code>.</li>
+<li>Converts logits to predicted sequences and calculates the BLEU score for each predicted sequence compared to the ground truth, using a smoothing function to adjust the score computation.</li>
+</ul></li>
+<li><p><strong>Calculation of Final Metrics</strong>:</p>
+
+<ul>
+<li>Computes the perplexity from the total loss accumulated across all batches.</li>
+<li>Calculates the average BLEU score from scores obtained from individual predictions.</li>
+</ul></li>
+<li><p><strong>Output</strong>: Prints and returns the perplexity and the average BLEU score.</p></li>
+</ol>
+
+<p>This function is valuable for evaluating translation models or other sequence generation tasks where alignment between the predicted sequence and the ground truth is important.</p>
+
+<h1>transformer_model.py</h1>
+
+<h2>File Summary</h2>
+
+<p>This Python file defines a Transformer-based language model class named <code>TransformerLanguageModel</code> for next-word prediction, built using PyTorch. Here are the key components and functionalities of the model:</p>
+
+<ol>
+<li><p><strong>Class Definition</strong>: <code>TransformerLanguageModel</code> is a subclass of <code>nn.Module</code>. It is designed to predict the next word in a sequence by considering the context provided through previous words.</p></li>
+<li><p><strong>Initialization</strong>:</p>
+
+<ul>
+<li>The model is initialized with parameters like vocabulary size, embedding dimension, number of attention heads, number of layers, pad token ID, sequence length, and dropout rate.</li>
+<li>It uses embeddings for tokens and positions and constructs a Transformer encoder from PyTorch's <code>nn.TransformerEncoderLayer</code> and <code>nn.TransformerEncoder</code>.</li>
+<li>A fully connected output layer and a dropout layer are also included.</li>
+</ul></li>
+<li><p><strong>Forward Pass</strong>:</p>
+
+<ul>
+<li>The <code>forward</code> method involves computing embeddings, applying dropout, generating subsequent masks (to enforce causality and manage padding), and passing the result through the transformer encoder.</li>
+<li>The output from the transformer is then fed into the fully connected layer to get the logits.</li>
+</ul></li>
+<li><p><strong>Auxiliary Methods</strong>:</p>
+
+<ul>
+<li><code>_generate_square_subsequent_mask</code>: Generates a mask for the Transformer to prevent attention to future positions.</li>
+<li><code>predict_next_token</code>: Predicts the next token ID using temperature sampling to soften the probability distribution before sampling.</li>
+<li><code>generate</code>: Autoregressively generates text based on a provided prompt and optional parameters like maximum length and temperature. It can return either the full text including the prompt or just the continuation.</li>
+</ul></li>
+<li><p><strong>Usage</strong>:</p>
+
+<ul>
+<li>This model can be employed in tasks like text generation or interactive dialogue systems where predicting the next word or generating text based on given inputs is required.</li>
+</ul></li>
+</ol>
+
+<p>The overall script is structured to provide essential functionalities for text generation utilizing the Transformer architecture, with provisions for sequence-to-sequence transformation, embeddings, and management of sequence lengths and padding.</p>
+
+<h2>Classes</h2>
+
+<ul>
+<li>TransformerLanguageModel: The <code>TransformerLanguageModel</code> class is a PyTorch module designed for next-word prediction using a Transformer architecture. Here's a summary of its key components and functionalities:</li>
+</ul>
+
+<ol>
+<li><p><strong>Initialization Parameters</strong>:</p>
+
+<ul>
+<li><code>vocab_size</code>: The size of the vocabulary.</li>
+<li><code>embed_dim</code>: The dimension of the token embeddings.</li>
+<li><code>num_heads</code>: The number of attention heads in each Transformer encoder layer.</li>
+<li><code>num_layers</code>: The number of layers in the Transformer encoder.</li>
+<li><code>pad_token_id</code>: The ID used for padding tokens.</li>
+<li><code>max_seq_len</code>: The maximum sequence length for position embeddings, defaulting to 512.</li>
+<li><code>dropout</code>: The dropout rate used in the Transformer and embedding layers.</li>
+</ul></li>
+<li><p><strong>Components</strong>:</p>
+
+<ul>
+<li><code>token_embedding</code>: Embedding layer for token IDs.</li>
+<li><code>position_embedding</code>: Embedding layer for position indices up to <code>max_seq_len</code>.</li>
+<li><code>transformer</code>: A Transformer encoder consisting of multiple layers specified by <code>encoder_layer</code>.</li>
+<li><code>fc_out</code>: A linear layer that projects from the embedding dimension back to the vocabulary size.</li>
+<li><code>dropout</code>: Dropout layer applied to embeddings.</li>
+</ul></li>
+<li><p><strong>Forward Pass</strong>:</p>
+
+<ul>
+<li>Processes input token IDs, adds token and position embeddings, applies dropout, and uses a Transformer encoder with mask handling to generate predictions, returning logits and a placeholder for the hidden state.</li>
+</ul></li>
+<li><p><strong>Mask Generation</strong>:</p>
+
+<ul>
+<li><code>_generate_square_subsequent_mask</code>: Creates a mask to prevent leakage from future tokens during training in the Transformer encoder.</li>
+</ul></li>
+<li><p><strong>Prediction and Text Generation</strong>:</p>
+
+<ul>
+<li><code>predict_next_token</code>: Does inference to predict the next token ID from the last output logits, using temperature to control the randomness of predictions.</li>
+<li><code>generate</code>: Autoregressively generates text from a prompt using the <code>predict_next_token</code> method, handling continuation-only or full text returns.</li>
+</ul></li>
+</ol>
+
+<p>Overall, this class encapsulates a Transformer-based model for generating text or predicting the next token, effectively modeling language given a series of input tokens. It utilizes embeddings, masked multi-head self-attention, and linear layers within a Transformer configuration to achieve its tasks.</p>
+
+<h1>llm_project.py</h1>
+
+<h2>File Summary</h2>
+
+<p>The provided Python script automates several tasks related to training language models on a specific dataset with various neural architectures. Here’s a concise breakdown of what the Python file contains and how it processes:</p>
+
+<ol>
+<li><p><strong>Imports and Setup</strong></p>
+
+<ul>
+<li>The script utilizes <code>torch</code> for deep learning operations.</li>
+<li>Multiple helper modules are imported to handle tokenization (<code>tokenizer</code>), data loading (<code>dataset_loader</code>), model definitions (<code>gru_model</code>, <code>lstm_model</code>, <code>rnn_model</code>, <code>transformer_model</code>), and training utilities (<code>train_utils</code>).</li>
+</ul></li>
+<li><p><strong>Configuration</strong></p>
+
+<ul>
+<li>Parameters required for training such as data URLs, file paths, tokenizer settings, network parameters, and training settings (batch size, epochs, device) are configured.</li>
+</ul></li>
+<li><p><strong>Data Handling</strong></p>
+
+<ul>
+<li>It downloads training and test datasets from specified URLs.</li>
+<li>A tokenizer is trained using a corpus obtained and merged from a given data source URL. This tokenizer is then wrapped for further use with datasets.</li>
+</ul></li>
+<li><p><strong>Dataset Preparation</strong></p>
+
+<ul>
+<li>Text datasets for both training and testing are created using the tokenizer and a maximum sequence length parameter.</li>
+<li>Data loaders for both datasets are prepared with specific batch sizes and shuffling settings.</li>
+</ul></li>
+<li><p><strong>Model Building</strong></p>
+
+<ul>
+<li>A function <code>build_model</code> is defined to instantiate one of the four model types (<code>GRU</code>, <code>LSTM</code>, <code>RNN</code>, <code>Transformer</code>) based on the configuration, with each model appropriately moved to the available computing device (GPU or CPU).</li>
+</ul></li>
+<li><p><strong>Training and Evaluation</strong></p>
+
+<ul>
+<li>The selected model is trained using the train data loader and evaluated against the test data loader. Both the model training and evaluation phases involve the use of utility functions that handle these processes.</li>
+<li>The trained model is saved to a specified path.</li>
+</ul></li>
+<li><p><strong>Sample Text Generation</strong></p>
+
+<ul>
+<li>At the end of the script, the trained model is used to generate text based on custom prompts provided in the script. This demonstrates the model's ability to generate coherent text based on input sequences.</li>
+</ul></li>
+</ol>
+
+<p>Overall, the script represents a comprehensive to setup, train, evaluate, and utilize deep learning models for natural language processing, showcasing flexibility across different neural network architectures (GRU, LSTM, RNN, and Transformer). The outcomes of the script depend on the data and the model configuration chosen at the outset.</p>
+
+<h2>Top-level Functions</h2>
+
+<ul>
+<li>build_model: The function <code>build_model</code> takes a single argument <code>model_type</code> and returns an instance of a language model based on the specified model type. It supports four types of models: "gru", "lstm", "rnn", and "transformer". Each model is configured with predefined parameters such as vocabulary size (<code>VOCAB_SIZE</code>), embedding dimension (set to 256), and other architecture-specific parameters. These models are moved to a specified device (<code>DEVICE</code>) after being instantiated. If the <code>model_type</code> is not one of the predefined types, the function raises a <code>ValueError</code> indicating that the model type is unsupported.</li>
+</ul>
+
+<h1>tokenizer.py</h1>
+
+<h2>File Summary</h2>
+
+<p>The Python file defines utilities for tokenization and management of text data. Here’s a summary of the components:</p>
+
+<ol>
+<li><p><strong>TokenizerWrapper Class:</strong></p>
+
+<ul>
+<li>This class acts as a wrapper around the SentencePiece tokenizer, facilitating tokenization tasks.</li>
+<li>It initializes by loading a SentencePiece model and sets up special tokens (<code>&lt;bos&gt;</code>, <code>&lt;eos&gt;</code>, <code>&lt;pad&gt;</code>) and their respective token IDs.</li>
+<li>Provides <code>encode()</code> method to convert text into token IDs, with optional addition of beginning-of-sentence (<code>&lt;bos&gt;</code>) and end-of-sentence (<code>&lt;eos&gt;</code>) tokens.</li>
+<li>Includes a <code>decode()</code> method to convert token IDs back to text, with an option to skip special tokens.</li>
+<li>Methods to retrieve IDs for pad, bos, and eos tokens.</li>
+</ul></li>
+<li><p><strong>download<em>and</em>merge<em>text</em>files Function:</strong></p>
+
+<ul>
+<li>Downloads text files from a specified API URL and merges them into a single output file. It specifically looks for files ending with <code>.txt</code>.</li>
+</ul></li>
+<li><p><strong>train_tokenizer Function:</strong></p>
+
+<ul>
+<li>Trains a Byte Pair Encoding (BPE) tokenizer using SentencePiece on a corpus located at <code>corpus_path</code>, saving the model with a specified prefix and a user-defined vocabulary size. The tokenizer is configured with specific token IDs for padding, unknown, beginning of sentence, and end of sentence.</li>
+</ul></li>
+<li><p><strong>download<em>file</em>from_url Function:</strong></p>
+
+<ul>
+<li>Downloads a file from a provided URL and saves it to a specified filename. It checks for successful download and informs the user upon completion.</li>
+</ul></li>
+</ol>
+
+<p>Overall, the file provides a suite of tools for text data preprocessing, tokenization, and model training suitable for tasks involving natural language processing.</p>
+
+<h2>Classes</h2>
+
+<ul>
+<li>TokenizerWrapper: The <code>TokenizerWrapper</code> class is designed as a utility for handling text tokenization using a pre-trained SentencePiece model, which is specified by the <code>model_path</code> provided during object initialization. The key functionalities provided by this class include:</li>
+</ul>
+
+<ol>
+<li><p><strong>Initialization (<code>__init__</code> Method)</strong>: </p>
+
+<ul>
+<li>Loads the SentencePiece model.</li>
+<li>Sets up special tokens for beginning of sentence (<code>bos</code>), end of sentence (<code>eos</code>), and padding (<code>pad</code>).</li>
+<li>Retrieves and stores the token IDs for these special tokens.</li>
+</ul></li>
+<li><p><strong>Text Encoding (<code>encode</code> Method)</strong>:</p>
+
+<ul>
+<li>Converts a given text to a sequence of token IDs using the SentencePiece model.</li>
+<li>Optionally adds <code>bos</code> and <code>eos</code> tokens at the beginning and end of the token sequence, respectively.</li>
+</ul></li>
+<li><p><strong>Text Decoding (<code>decode</code> Method)</strong>:</p>
+
+<ul>
+<li>Converts a sequence of token IDs back into string form using the SentencePiece model.</li>
+<li>Optionally skips special tokens (such as <code>bos</code>, <code>eos</code>, and <code>pad</code>) during the conversion process.</li>
+</ul></li>
+<li><p><strong>Utility Methods</strong>: </p>
+
+<ul>
+<li><code>get_pad_id</code>, <code>get_eos_id</code>, <code>get_bos_id</code> methods for retrieving the IDs of the pad, eos, and bos tokens, respectively.</li>
+</ul></li>
+</ol>
+
+<p>This class provides a streamlined interface for tokenizing and detokenizing texts with additional control over the inclusion of special tokens, suitable for tasks in natural language processing that require precise handling of input and output sequences.</p>
+
+<h2>Top-level Functions</h2>
+
+<ul>
+<li><p>download<em>and</em>merge<em>text</em>files: The function <code>download_and_merge_text_files</code> takes two parameters: <code>api_url</code> and <code>output_file</code>. It starts by making a GET request to the <code>api_url</code> to retrieve a list of files. It then iterates through each file listed in the JSON response. For each file that has a <code>.txt</code> extension (identified by the file name ending with ".txt"), the function makes another GET request to the file’s download URL to fetch the text content. This content is then written to a specified output file (<code>output_file</code>), appending a newline character after each file's content. This continues for all text files in the list, effectively merging them into the output file with UTF-8 encoding.</p></li>
+<li><p>train_tokenizer: The <code>train_tokenizer</code> function is designed to train a Byte-Pair Encoding (BPE) tokenizer using a specified corpus. The function is part of a larger code that utilizes the SentencePiece library for tokenizer training.</p></li>
+</ul>
+
+<p>Here’s a breakdown of its parameters and process:
+1. <strong>corpus<em>path</strong>: The file path to the corpus data that will be used for training the tokenizer.
+2. <strong>prefix</strong>: A prefix string for naming the trained model files.
+3. <strong>vocab</em>size</strong> (optional, default=10000): The number of tokens to be included in the tokenizer's vocabulary.</p>
+
+<p>The function configures the training with several parameters specific to the BPE model:
+- <strong>model<em>type</strong>: Set to <code>'bpe'</code> for Byte-Pair Encoding.
+- <strong>pad</em>id=3</strong>: Assigns the id <code>3</code> to the padding token.
+- <strong>unk<em>id=0</strong>: Sets the id <code>0</code> for the unknown token.
+- <strong>bos</em>id=1</strong>: Designates the id <code>1</code> for the beginning of sentence token.
+- <strong>eos<em>id=2</strong>: Assigns the end of sentence token id <code>2</code>.
+- <strong>user</em>defined_symbols</strong>: Includes special tokens like <code>&lt;bos&gt;</code>, <code>&lt;eos&gt;</code>, and <code>&lt;pad&gt;</code> in the vocabulary.</p>
+
+<p>This setup indicates a basic configuration for a BPE tokenizer, suitable for various text processing tasks that require tokenization with a fixed vocabulary size, special token handling, and using SentencePiece's efficient training mechanism.</p>
+
+<ul>
+<li>download<em>file</em>from_url: The function <code>download_file_from_url</code> downloads a file from a specified URL (<code>file_url</code>) and saves it to a local file with the name <code>output_filename</code>. It performs the following steps:</li>
+</ul>
+
+<ol>
+<li>It makes an HTTP GET request to the specified URL.</li>
+<li>It checks if the request was successful (<code>response.raise_for_status()</code>) and raises an exception if there was an error such as a 404 or 500 status code.</li>
+<li>If the request is successful, the content of the response (assuming it is text) is saved to a file specified by <code>output_filename</code>. The file is encoded in UTF-8.</li>
+<li>It prints a message indicating that the file was successfully downloaded and saved.</li>
+<li>Additionally, it prints another message confirming the name of the downloaded file. </li>
+</ol>
+
+<p>This function essentially handles the downloading of text files from the web and ensures they are saved locally with proper error handling and notifications.</p>
+
+<h1>dataset_loader.py</h1>
+
+<h2>File Summary</h2>
+
+<p>This Python file is focused on text processing for machine learning applications using PyTorch. It involves adding special tokens to text data, managing a custom text dataset, and preparing data batches for training. Here's a summary of the key components:</p>
+
+<ol>
+<li><p><strong>Imports:</strong></p>
+
+<ul>
+<li>The script imports necessary modules such as <code>json</code> for parsing JSON files, <code>torch</code>, and components from <code>torch.utils.data</code> and <code>torch.nn</code>.</li>
+</ul></li>
+<li><p><strong>Function <code>add_special_tokens</code>:</strong></p>
+
+<ul>
+<li>This function adds special tokens "<bos>" (beginning of sentence) and "<eos>" (end of sentence) to the dataset. "<bos>" is added at the beginning if the first letter of the prompt is uppercase, and "<eos>" is appended if the completion ends with '.', '?', or '!'. It returns two lists containing the updated prompts and completions.</li>
+</ul></li>
+<li><p><strong>Class <code>TextDataset</code> (inherits from <code>Dataset</code>):</strong></p>
+
+<ul>
+<li>This class is used to handle a text dataset. It takes a file path, a tokenizer, and a maximum sequence length as inputs.</li>
+<li>It parses a JSON file to extract text data, tokenizes the text, and truncates or pads it to a specified maximum length. The tokenized text objects are stored internally.</li>
+<li>The <code>__len__</code> method returns the number of samples in the dataset.</li>
+<li>The <code>__getitem__</code> method retrieves a text sample by its index, returning a version offset by one token as input and target, effectively setting up data for next-token prediction tasks.</li>
+</ul></li>
+<li><p><strong>Function <code>collate_fn</code>:</strong></p>
+
+<ul>
+<li>This function is used for batching the data. It receives a list of samples and a padding value.</li>
+<li>Inputs and targets are extracted, then padded to the maximum sequence length in the batch. It ensures that all data samples in a batch are of the same length, returning the batched inputs and targets.</li>
+</ul></li>
+</ol>
+
+<p>This script is structured to facilitate the preprocessing and loading of text data, utilizing PyTorch's capabilities for efficient handling of sequences and batch preparation, which are essential steps in the pipeline of training models for natural language processing tasks.</p>
+
+<h2>Classes</h2>
+
+<ul>
+<li>TextDataset: The <code>TextDataset</code> class, derived from <code>Dataset</code>, is designed to process text data for natural language processing tasks. It initializes by loading text samples from a specified file and tokenizing them into numerical IDs using the provided tokenizer. The key steps and features of this class are as follows:</li>
+</ul>
+
+<ol>
+<li><p><strong>Initialization (<code>__init__</code>):</strong></p>
+
+<ul>
+<li>The constructor takes three parameters: <code>filepath</code> for the dataset file, <code>tokenizer</code> for converting text to tokens, and <code>max_seq_len</code> to limit the sequence length of tokens.</li>
+<li>The text file is read line by line, and each line is expected to be a JSON object with keys 'prompt' and 'completion'. These values are concatenated, stripped of leading/trailing whitespace, and fed into the tokenizer.</li>
+<li>The tokenizer encodes the concatenated text to produce a sequence of token IDs, capped at <code>max_seq_len</code>. The sequence includes beginning-of-sentence (<code>bos</code>) and end-of-sentence (<code>eos</code>) tokens.</li>
+<li>Only sequences with at least 2 tokens are added to the dataset (<code>self.samples</code>).</li>
+</ul></li>
+<li><p><strong>Length (<code>__len__</code>):</strong></p>
+
+<ul>
+<li>This method returns the number of samples in the dataset.</li>
+</ul></li>
+<li><p><strong>Item Access (<code>__getitem__</code>):</strong></p>
+
+<ul>
+<li>Retrieves a specific sample by its index (<code>idx</code>). This method is used to access individual token sequences in the dataset.</li>
+<li>For each sample accessed, it returns a pair of tensors: the input sequence (<code>tokens[:-1]</code>) and the target sequence (<code>tokens[1:]</code>). This setup is typical in language modeling, where the model predicts the next token in a sequence based on the previous tokens.</li>
+</ul></li>
+</ol>
+
+<p>Overall, the <code>TextDataset</code> class neatly packages text data into manageable sequences useful for training language models, providing functionality to both preprocess and access the data efficiently.</p>
+
+<h2>Top-level Functions</h2>
+
+<ul>
+<li><p>add<em>special</em>tokens: The function <code>add_special_tokens</code> takes a tuple of two lists of strings as input, representing pairs of prompts and completions. It processes each pair to add special tokens: <code>&lt;bos&gt;</code> (beginning of sentence) is prepended to prompts that start with an uppercase letter, and <code>&lt;eos&gt;</code> (end of sentence) is appended to completions that end with punctuation marks (period, question mark, or exclamation point). The function returns a tuple containing two lists: one for the modified prompts and the other for the modified completions. This helps in marking the beginning and end points of sentences within the dataset, which could be useful for training language models or other NLP applications.</p></li>
+<li><p>collate_fn: The <code>collate_fn</code> function is designed to process a batch of data, ensuring that both inputs and targets are appropriately padded to the same length for batch processing in neural network models. Here's a step-by-step summary of what this function does:</p></li>
+</ul>
+
+<ol>
+<li><p><strong>Unpacking the Batch</strong>: The function takes two parameters: <code>batch</code>, which is a list of tuples where each tuple contains an <code>input</code> sequence and a corresponding <code>target</code> sequence; and <code>pad_val</code>, which specifies the padding value to use for sequences shorter than the maximum length in the batch.</p></li>
+<li><p><strong>Separating Inputs and Targets</strong>: Using <code>zip(*batch)</code>, the function separates the inputs and targets from the batch into separate tuples.</p></li>
+<li><p><strong>Padding the Sequences</strong>: It uses the <code>pad_sequence</code> method from <code>nn.utils.rnn</code> for both <code>inputs</code> and <code>targets</code>. This method adjusts the length of all sequences in each tuple to match the longest sequence by adding the <code>pad_val</code> value at the end of shorter sequences. The <code>batch_first=True</code> argument ensures that the batch dimension is at the first axis (i.e., the shape of the output tensor will be <code>[batch_size, max_seq_length]</code>).</p></li>
+<li><p><strong>Returning Processed Batch</strong>: The function returns a tuple containing the padded <code>inputs</code> and <code>targets</code>.</p></li>
+</ol>
+
+<p>This function is particularly useful when building models that handle sequences of varying lengths, such as those commonly found in natural language processing or time series analysis, allowing for efficient batch processing in deep learning architectures.</p>
+
+<h1>rnn_model.py</h1>
+
+<h2>File Summary</h2>
+
+<p>This Python file defines a simple recurrent neural network (RNN) based language model using PyTorch. The model, named <code>RNNLanguageModel</code>, is implemented as a class that inherits from PyTorch's <code>nn.Module</code>. Here are the key functionalities and components of the model:</p>
+
+<ol>
+<li><p><strong>Initialization (<code>__init__</code>)</strong>:</p>
+
+<ul>
+<li>The model is initialized with several parameters: <code>vocab_size</code> (size of the vocabulary), <code>embed_dim</code> (dimension of the embedding layer), <code>hidden_dim</code> (dimension of the hidden layer in RNN), <code>num_layers</code> (number of RNN layers), <code>pad_token_id</code> (padding token ID for embeddings), and an optional <code>dropout_prob</code> (probability for dropout layers).</li>
+<li>The model architecture includes an embedding layer for token embeddings, a recurrent neural network (RNN) layer, a dropout layer for regularization, and a fully connected (linear) layer that outputs the logits representing the probability distribution over the vocabulary.</li>
+</ul></li>
+<li><p><strong>Forward Pass (<code>forward</code>)</strong>:</p>
+
+<ul>
+<li>The <code>forward</code> method defines how the data flows through the model. It takes <code>input_ids</code> (token indices) and an optional <code>hidden</code> state as inputs. The method processes the input ids through the embedding layer, the RNN layer (where it optionally takes a hidden state), applies dropout, and then returns the output logits from the fully connected layer along with the new hidden state.</li>
+</ul></li>
+<li><p><strong>Predict Next Token (<code>predict_next_token</code>)</strong>:</p>
+
+<ul>
+<li>This method is designed to predict the next token in a sequence given the current input tokens. It prevents the sampling of a beginning-of-sentence (<code>&lt;bos&gt;</code>) token, scales the logits by a temperature parameter (for controlling randomness), and applies softmax to convert logits to probabilities. The method then samples from these probabilities to get the next token and returns it along with the updated hidden state.</li>
+</ul></li>
+<li><p><strong>Generate Text (<code>generate</code>)</strong>:</p>
+
+<ul>
+<li>This method generates text given a prompt. It uses the <code>predict_next_token</code> method in a loop to generate tokens up to a maximum length or until an end-of-sentence (<code>&lt;eos&gt;</code>) token is encountered. It supports returning either the full text (including the prompt) or just the continuation of the prompt. Text generation is controlled by parameters such as <code>device</code> (to place tensors on the correct hardware), <code>max_length</code>, <code>temperature</code>, and <code>return_continuation_only</code>.</li>
+</ul></li>
+</ol>
+
+<p>Overall, this file provides a basic framework for training and using an RNN-based language model for generating text sequences, applicable in tasks such as autocompletion, chatbot responses, or other language generation tasks.</p>
+
+<h2>Classes</h2>
+
+<ul>
+<li>RNNLanguageModel: The <code>RNNLanguageModel</code> class defined above is a recurrent neural network-based language model built using PyTorch's <code>nn.Module</code>. </li>
+</ul>
+
+<p>Key Components of the Class:</p>
+
+<ol>
+<li><p><strong>Initialization (<code>__init__</code> method)</strong>:</p>
+
+<ul>
+<li><strong>Parameters</strong>:
+<ul>
+<li><code>vocab_size</code>: Total number of tokens in the vocabulary.</li>
+<li><code>embed_dim</code>: Dimensionality of the token embeddings.</li>
+<li><code>hidden_dim</code>: Dimensionality of the RNN's hidden state.</li>
+<li><code>num_layers</code>: Number of RNN layers stacked together.</li>
+<li><code>pad_token_id</code>: ID used to represent padding tokens.</li>
+<li><code>dropout_prob</code>: Probability of an element to be zeroed (default is 0.3).</li>
+</ul></li>
+<li><strong>Components</strong>:
+<ul>
+<li><code>self.embedding</code>: Embedding layer to convert token IDs to embeddings.</li>
+<li><code>self.rnn</code>: RNN layer that processes the sequences.</li>
+<li><code>self.dropout</code>: Dropout layer applied to the outputs of the RNN.</li>
+<li><code>self.fc</code>: Linear layer that projects the RNN output back to the vocabulary size for next token prediction.</li>
+</ul></li>
+</ul></li>
+<li><p><strong>Forward Pass (<code>forward</code> method)</strong>:</p>
+
+<ul>
+<li>Process input through the model in a forward direction to predict outputs based on input ids.</li>
+<li>It returns the logits (output from <code>self.fc</code>) and the updated hidden states.</li>
+</ul></li>
+<li><p><strong>Predicting Next Token (<code>predict_next_token</code> method)</strong>:</p>
+
+<ul>
+<li>Uses the model in evaluation mode to predict the next token from the input sequence.</li>
+<li>Applies a temperature to adjust the "sharpness" of the distribution before sampling a token.</li>
+<li>Ensures the beginning-of-sentence (BOS) token is not predicted again by setting its logit to negative infinity.</li>
+</ul></li>
+<li><p><strong>Generating Text (<code>generate</code> method)</strong>:</p>
+
+<ul>
+<li>Generates text autoregressively using the provided prompt for a specified maximum length or until an end-of-sentence (EOS) token is produced.</li>
+<li>Accepts parameters like device (e.g., <code>cpu</code> or <code>cuda</code>), maximum output length, and temperature.</li>
+<li>Offers an option to return only the continuation of the prompt or the entire generated sequence including the prompt.</li>
+<li>Leverages the <code>predict_next_token</code> method for generating each subsequent token.</li>
+</ul></li>
+</ol>
+
+<p>This model effectively encapsulates the typical functionalities of an RNN-based language model for tasks such as next-token prediction and text generation, using learned embeddings and recurrent dynamics.</p>
+
+<h1>lstm_model.py</h1>
+
+<h2>File Summary</h2>
+
+<p>The Python file presents an implementation of an LSTM-based language model using PyTorch. The <code>LSTMLanguageModel</code> class, inheriting from <code>torch.nn.Module</code>, is defined within this file. Here's a summary of the key components and functionalities provided by this class:</p>
+
+<ol>
+<li><p><strong>Initialization</strong>: The <code>__init__</code> method sets up the LSTM language model with configurable parameters including vocabulary size (<code>vocab_size</code>), embedding dimension (<code>embed_dim</code>), hidden dimensions (<code>hidden_dim</code>), number of layers (<code>num_layers</code>), padding token ID (<code>pad_token_id</code>), and dropout probability (<code>dropout_prob</code>). It initializes an embedding layer, LSTM layer, dropout layer, and a fully connected layer within the model architecture.</p></li>
+<li><p><strong>Forward Pass</strong>: Implemented in the <code>forward</code> method, it processes input tokens (<code>input_ids</code>) by first embedding them, then passing them through an LSTM network, applying dropout, and finally projecting the LSTM outputs to the vocabulary space using a linear layer. It returns the logits and the hidden states.</p></li>
+<li><p><strong>Token Prediction</strong>: The <code>predict_next_token</code> method predicts the next token given a sequence of input IDs, a beginning-of-sentence (<code>bos_id</code>) token to prevent its generation, hidden states, and temperature for smoothing. It outputs the predicted next token ID and updated hidden states, using softmax for probability distribution and sampling.</p></li>
+<li><p><strong>Text Generation</strong>: The <code>generate</code> method performs text generation starting from a provided prompt. It takes additional parameters such as the tokenizer, the device on which tensors are processed, maximal length for the generated text, temperature for controlling randomness, and a flag whether to return only the text continuation from the prompt. This method manages the sequence generation, token-by-token, stopping when an end-of-sentence token (<code>eos_id</code>) is generated or the maximum length is reached.</p></li>
+</ol>
+
+<p>Overall, this model facilitates building a generative language model leveraging LSTM networks for tasks such as text prediction and generation, accommodating control of text diversity and coherency through temperature adjustments and structural configurations.</p>
+
+<h2>Classes</h2>
+
+<ul>
+<li><p>LSTMLanguageModel: The class <code>LSTMLanguageModel</code> is a PyTorch neural network model that extends <code>nn.Module</code>. It's designed to generate language based on an LSTM architecture. The model initialization receives several parameters to configure the LSTM and associated layers:</p></li>
+<li><p><code>vocab_size</code>: the size of the vocabulary.</p></li>
+<li><code>embed_dim</code>: the dimensionality of the embedding layer.</li>
+<li><code>hidden_dim</code>: the number of features in the hidden state of the LSTM.</li>
+<li><code>num_layers</code>: the number of layers in the LSTM.</li>
+<li><code>pad_token_id</code>: the token ID used for padding.</li>
+<li><code>dropout_prob</code>: the dropout rate, defaulting to 0.3.</li>
+</ul>
+
+<p>The model comprises four main components:
+1. <strong>Embedding Layer</strong>: Maps each token ID to a high-dimensional space (defined by <code>embed_dim</code>).
+2. <strong>LSTM Layer</strong>: Processes sequences using <code>hidden_dim</code>, <code>num_layers</code>, and manages dropout.
+3. <strong>Dropout Layer</strong>: Applied to the outputs of the LSTM for regularization.
+4. <strong>Fully Connected Layer</strong>: Transforms the hidden state output to the size of the vocabulary for token prediction.</p>
+
+<p>The <code>forward</code> method defines the forward pass of the model, which takes token IDs (<code>input_ids</code>) and optional hidden states (<code>hidden</code>). It processes the input through embedding, LSTM, and dropout layers sequentially, and finally through the fully connected layer to produce output logits and hidden states.</p>
+
+<p>Additional methods:
+- <code>predict_next_token</code>: Predicts the next token in a sequence given the current input IDs and the beginning of sequence (BOS) token ID, controlling the randomness of predictions with a <code>temperature</code> parameter.
+- <code>generate</code>: Generates text from a given prompt and tokenizer setup, able to continue up to <code>max_length</code> tokens and selectively return just the generated continuation or the entire text including the prompt.</p>
+
+<p>This setup makes the model particularly suited for tasks such as text generation, where sequences of tokens need to be predicted.</p>
+
+<h1>llm_experiment.py</h1>
+
+<h2>File Summary</h2>
+
+<p>This Python script, intended for execution on Jupyter Notebook via Google Colab, establishes a framework for experimenting with different types of language models using the PyTorch library. Here's a breakdown of its functionality:</p>
+
+<ol>
+<li><p><strong>Imports</strong>:</p>
+
+<ul>
+<li>Core functionalities and models from PyTorch.</li>
+<li>Utility functions related to tokenization, dataset creation, and model evaluations.</li>
+<li>Various language model implementations such as GRU, LSTM, RNN, and Transformer.</li>
+</ul></li>
+<li><p><strong>Setting Up the Environment</strong>:</p>
+
+<ul>
+<li>Hyperparameters for GRU, LSTM, RNN, and Transformer models are defined in a dictionary called <code>hyperparams_grid</code>.</li>
+<li>Constants like paths for train and test datasets, tokenizer properties, vocabulary size, sequence length, batch size, and epochs are defined.</li>
+<li>Configuration for the type of device (CPU/GPU) to run the model on.</li>
+</ul></li>
+<li><p><strong>Data Preparation</strong>:</p>
+
+<ul>
+<li>Downloading and preparing corpus files.</li>
+<li>Tokenization using a specially trained BPE tokenizer.</li>
+<li>Loading datasets and creating batch loaders.</li>
+</ul></li>
+<li><p><strong>Model Training and Evaluation</strong>:</p>
+
+<ul>
+<li>The script contains a function, <code>run_experiments</code>, to systematically evaluate different model configurations from the defined hyperparameter grid.</li>
+<li>Each configuration is used to instantiate, train, and evaluate a model while tracking the performance metrics such as perplexity and BLEU score.</li>
+<li>The models are trained using saved data loaders that handle dataset batching and padding appropriately.</li>
+</ul></li>
+<li><p><strong>Experiment Execution</strong>:</p>
+
+<ul>
+<li>Although customizable, by default the script seems set to run experiments for the GRU model type, as indicated by the final incomplete line. This implies manual selection and commenting/uncommenting lines to switch between model types like GRU, LSTM, RNN, or Transformer for running respective experiments.</li>
+</ul></li>
+</ol>
+
+<p><strong>Potential Enhancements and Usage</strong>:
+- To use this script effectively and to execute full experiments, a user would typically need to select the model type manually, possibly change hyperparameters, and might also ensure all dependent files and utilities are correctly implemented and imported.
+- The code snippet is incomplete at the end but implies typical usage where you would specify the model type and possibly iterate over different types if automating comprehensive tests over multiple runs.
+- The script seems well structured for modular experimentation with different neural network architectures in NLP applications, particularly for language modeling tasks.</p>
+
+<h2>Top-level Functions</h2>
+
+<ul>
+<li>run_experiments: This function, <code>run_experiments</code>, systematically evaluates different configurations of models in a specified type (<code>model_type</code>) based on a configuration grid (<code>grid</code>). These models are either variants of a <code>transformer</code> or another unspecified type, instantiated through a provided <code>ModelClass</code>. The configurations differ primarily in parameters such as embedding dimensions, number of heads and layers (for transformers), or hidden dimensions (for other model types). For each configuration:</li>
+</ul>
+
+<ol>
+<li>A unique identifier (<code>model_id</code>) is generated for the model based on its type, index in the grid, and the current timestamp.</li>
+<li>The function prints out the model being trained along with its configuration.</li>
+<li>Depending on the <code>model_type</code>, either a transformer model or another model is initialized with specified parameters from the configuration grid and moved to the specified <code>device</code> for GPU computation (if available).</li>
+<li>Each model is then trained and saved to disk (using <code>train_model</code> function), specifying learning rate from the config and constraining training to 50 epochs.</li>
+<li>Post training, each model is evaluated using the <code>evaluate_model</code> function, which returns performance metrics such as perplexity (<code>ppl</code>) and BLEU score (<code>bleu</code>).</li>
+<li>The results from each model evaluation are accumulated into a list with details on the <code>model_type</code>, <code>config</code>, <code>perplexity</code>, <code>bleu_score</code>, and local file path of the trained model (<code>model_path</code>). </li>
+</ol>
+
+<p>This function allows for the analysis of different neural network configurations' performances on training and testing datasets provided (<code>train_loader</code> and <code>test_loader</code>), leveraging the computational capabilities of the specified <code>device</code>.</p>
+
+
+<hr>
+
+<h2>Code Review and Future Work</h2>
+
+<p>The project demonstrates strong modular design, clear organization of models, utilities, and training scripts. Code quality is solid with clear naming conventions and modularity principles.</p>
+
+<p>Future improvements could include:
+- Adding unit tests for critical modules and functions
+- Increasing flexibility by externalizing model parameters via configuration files
+- Implementing better exception handling and logging across modules
+- Introducing continuous integration (CI) tools for automated testing
+- Exploring further model enhancements or optimization techniques</p>
+
+<p>Overall, the project is well-structured and easy for new developers to understand and contribute to.</p>
+
+
+</body>
+</html>
+    

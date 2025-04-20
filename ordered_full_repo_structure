@@ -1,0 +1,121 @@
+// Ordered Repo Structure
+digraph {
+	rankdir=LR
+	gru_model [shape=box]
+	"gru_model.GRULanguageModel" [shape=ellipse]
+	gru_model -> "gru_model.GRULanguageModel"
+	"gru_model.GRULanguageModel.__init__" [shape=plaintext]
+	"gru_model.GRULanguageModel" -> "gru_model.GRULanguageModel.__init__"
+	"gru_model.GRULanguageModel.forward" [shape=plaintext]
+	"gru_model.GRULanguageModel" -> "gru_model.GRULanguageModel.forward"
+	"gru_model.GRULanguageModel.predict_next_token" [shape=plaintext]
+	"gru_model.GRULanguageModel" -> "gru_model.GRULanguageModel.predict_next_token"
+	"gru_model.GRULanguageModel.generate" [shape=plaintext]
+	"gru_model.GRULanguageModel" -> "gru_model.GRULanguageModel.generate"
+	train_utils [shape=box]
+	"train_utils.train_model" [shape=plaintext]
+	train_utils -> "train_utils.train_model"
+	"train_utils.plot_losses" [shape=plaintext]
+	train_utils -> "train_utils.plot_losses"
+	"train_utils.evaluate_model" [shape=plaintext]
+	train_utils -> "train_utils.evaluate_model"
+	transformer_model [shape=box]
+	"transformer_model.TransformerLanguageModel" [shape=ellipse]
+	transformer_model -> "transformer_model.TransformerLanguageModel"
+	"transformer_model.TransformerLanguageModel.__init__" [shape=plaintext]
+	"transformer_model.TransformerLanguageModel" -> "transformer_model.TransformerLanguageModel.__init__"
+	"transformer_model.TransformerLanguageModel.forward" [shape=plaintext]
+	"transformer_model.TransformerLanguageModel" -> "transformer_model.TransformerLanguageModel.forward"
+	"transformer_model.TransformerLanguageModel._generate_square_subsequent_mask" [shape=plaintext]
+	"transformer_model.TransformerLanguageModel" -> "transformer_model.TransformerLanguageModel._generate_square_subsequent_mask"
+	"transformer_model.TransformerLanguageModel.predict_next_token" [shape=plaintext]
+	"transformer_model.TransformerLanguageModel" -> "transformer_model.TransformerLanguageModel.predict_next_token"
+	"transformer_model.TransformerLanguageModel.generate" [shape=plaintext]
+	"transformer_model.TransformerLanguageModel" -> "transformer_model.TransformerLanguageModel.generate"
+	tokenizer [shape=box]
+	"tokenizer.TokenizerWrapper" [shape=ellipse]
+	tokenizer -> "tokenizer.TokenizerWrapper"
+	"tokenizer.TokenizerWrapper.__init__" [shape=plaintext]
+	"tokenizer.TokenizerWrapper" -> "tokenizer.TokenizerWrapper.__init__"
+	"tokenizer.TokenizerWrapper.encode" [shape=plaintext]
+	"tokenizer.TokenizerWrapper" -> "tokenizer.TokenizerWrapper.encode"
+	"tokenizer.TokenizerWrapper.decode" [shape=plaintext]
+	"tokenizer.TokenizerWrapper" -> "tokenizer.TokenizerWrapper.decode"
+	"tokenizer.TokenizerWrapper.get_pad_id" [shape=plaintext]
+	"tokenizer.TokenizerWrapper" -> "tokenizer.TokenizerWrapper.get_pad_id"
+	"tokenizer.TokenizerWrapper.get_eos_id" [shape=plaintext]
+	"tokenizer.TokenizerWrapper" -> "tokenizer.TokenizerWrapper.get_eos_id"
+	"tokenizer.TokenizerWrapper.get_bos_id" [shape=plaintext]
+	"tokenizer.TokenizerWrapper" -> "tokenizer.TokenizerWrapper.get_bos_id"
+	"tokenizer.download_and_merge_text_files" [shape=plaintext]
+	tokenizer -> "tokenizer.download_and_merge_text_files"
+	"tokenizer.train_tokenizer" [shape=plaintext]
+	tokenizer -> "tokenizer.train_tokenizer"
+	"tokenizer.download_file_from_url" [shape=plaintext]
+	tokenizer -> "tokenizer.download_file_from_url"
+	dataset_loader [shape=box]
+	"dataset_loader.TextDataset" [shape=ellipse]
+	dataset_loader -> "dataset_loader.TextDataset"
+	"dataset_loader.TextDataset.__init__" [shape=plaintext]
+	"dataset_loader.TextDataset" -> "dataset_loader.TextDataset.__init__"
+	"dataset_loader.TextDataset.__len__" [shape=plaintext]
+	"dataset_loader.TextDataset" -> "dataset_loader.TextDataset.__len__"
+	"dataset_loader.TextDataset.__getitem__" [shape=plaintext]
+	"dataset_loader.TextDataset" -> "dataset_loader.TextDataset.__getitem__"
+	"dataset_loader.add_special_tokens" [shape=plaintext]
+	dataset_loader -> "dataset_loader.add_special_tokens"
+	"dataset_loader.collate_fn" [shape=plaintext]
+	dataset_loader -> "dataset_loader.collate_fn"
+	rnn_model [shape=box]
+	"rnn_model.RNNLanguageModel" [shape=ellipse]
+	rnn_model -> "rnn_model.RNNLanguageModel"
+	"rnn_model.RNNLanguageModel.__init__" [shape=plaintext]
+	"rnn_model.RNNLanguageModel" -> "rnn_model.RNNLanguageModel.__init__"
+	"rnn_model.RNNLanguageModel.forward" [shape=plaintext]
+	"rnn_model.RNNLanguageModel" -> "rnn_model.RNNLanguageModel.forward"
+	"rnn_model.RNNLanguageModel.predict_next_token" [shape=plaintext]
+	"rnn_model.RNNLanguageModel" -> "rnn_model.RNNLanguageModel.predict_next_token"
+	"rnn_model.RNNLanguageModel.generate" [shape=plaintext]
+	"rnn_model.RNNLanguageModel" -> "rnn_model.RNNLanguageModel.generate"
+	lstm_model [shape=box]
+	"lstm_model.LSTMLanguageModel" [shape=ellipse]
+	lstm_model -> "lstm_model.LSTMLanguageModel"
+	"lstm_model.LSTMLanguageModel.__init__" [shape=plaintext]
+	"lstm_model.LSTMLanguageModel" -> "lstm_model.LSTMLanguageModel.__init__"
+	"lstm_model.LSTMLanguageModel.forward" [shape=plaintext]
+	"lstm_model.LSTMLanguageModel" -> "lstm_model.LSTMLanguageModel.forward"
+	"lstm_model.LSTMLanguageModel.predict_next_token" [shape=plaintext]
+	"lstm_model.LSTMLanguageModel" -> "lstm_model.LSTMLanguageModel.predict_next_token"
+	"lstm_model.LSTMLanguageModel.generate" [shape=plaintext]
+	"lstm_model.LSTMLanguageModel" -> "lstm_model.LSTMLanguageModel.generate"
+	llm_project [shape=box]
+	"llm_project.build_model" [shape=plaintext]
+	llm_project -> "llm_project.build_model"
+	llm_experiment [shape=box]
+	"llm_experiment.run_experiments" [shape=plaintext]
+	llm_experiment -> "llm_experiment.run_experiments"
+	llm_project -> tokenizer [color=gray style=dashed]
+	llm_project -> dataset_loader [color=gray style=dashed]
+	llm_project -> gru_model [color=gray style=dashed]
+	llm_project -> train_utils [color=gray style=dashed]
+	llm_project -> tokenizer [color=gray style=dashed]
+	llm_project -> dataset_loader [color=gray style=dashed]
+	llm_project -> train_utils [color=gray style=dashed]
+	llm_project -> gru_model [color=gray style=dashed]
+	llm_project -> lstm_model [color=gray style=dashed]
+	llm_project -> rnn_model [color=gray style=dashed]
+	llm_project -> transformer_model [color=gray style=dashed]
+	llm_experiment -> tokenizer [color=gray style=dashed]
+	llm_experiment -> dataset_loader [color=gray style=dashed]
+	llm_experiment -> gru_model [color=gray style=dashed]
+	llm_experiment -> train_utils [color=gray style=dashed]
+	llm_experiment -> train_utils [color=gray style=dashed]
+	llm_experiment -> gru_model [color=gray style=dashed]
+	llm_experiment -> lstm_model [color=gray style=dashed]
+	llm_experiment -> rnn_model [color=gray style=dashed]
+	llm_experiment -> transformer_model [color=gray style=dashed]
+	llm_experiment -> transformer_model [color=gray style=dashed]
+	llm_experiment -> gru_model [color=gray style=dashed]
+	llm_experiment -> lstm_model [color=gray style=dashed]
+	llm_experiment -> rnn_model [color=gray style=dashed]
+}
