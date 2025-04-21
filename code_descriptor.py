@@ -11,7 +11,7 @@ from openai import OpenAI
 # --- CONFIGURATION ---
 PROJECT_TITLE = "Foundation Models Language Project"
 GITHUB_LINK = "https://github.com/vimalthomas/foundationmodels"
-OPENAI_API_KEY = "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"  # Replace your OpenAI API key here
+OPENAI_API_KEY = ""  # Replace your OpenAI API key here
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 DOWNLOAD_PATH = './downloaded_repo'
